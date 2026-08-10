@@ -22,15 +22,11 @@
     .content-shell { min-height:100vh; margin-left:var(--sidebar); padding:0 34px; }
     .page-tools-row { width:min(1320px,100%); height:82px; margin:auto; display:flex; justify-content:flex-end; align-items:center; gap:10px; }
     .page-tool { position:relative; width:42px; height:42px; display:grid; place-items:center; border:0; border-radius:14px; color:var(--ink); background:transparent; cursor:pointer; transition:background .2s ease,transform .2s ease; }
-    .page-tool:hover,.page-tool[aria-expanded="true"] { background:rgba(255,255,255,.8); transform:translateY(-1px); }
+    .page-tool--static { cursor:default; }
+    .page-tool:hover { background:rgba(255,255,255,.8); transform:translateY(-1px); }
     .page-tool svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
     .page-tool::after { content:attr(data-tooltip); position:absolute; top:46px; right:0; width:max-content; padding:6px 9px; opacity:0; pointer-events:none; border-radius:8px; color:white; background:var(--ink); font-size:11px; transform:translateY(-3px); transition:.2s ease; }
     .page-tool:hover::after,.page-tool:focus-visible::after { opacity:1; transform:none; }
-    .page-tool-menu-wrap { position:relative; }
-    .page-tool-menu { position:absolute; z-index:20; top:50px; right:0; width:146px; padding:7px; border:1px solid rgba(49,57,89,.09); border-radius:14px; background:#fff; box-shadow:0 18px 45px rgba(41,48,74,.16); }
-    .page-tool-menu[hidden] { display:none; }
-    .page-tool-menu button { width:100%; padding:11px 12px; border:0; border-radius:9px; color:var(--ink); background:transparent; text-align:left; cursor:pointer; }
-    .page-tool-menu button:hover { background:#f3f5fb; }
     .content-frame { width:min(1160px,100%); margin-left:auto; margin-right:auto; }
     .content-stage { min-height:calc(100vh - 82px); padding:32px 0 70px; display:flex; flex-direction:column; justify-content:center; }
     .direction-intro { margin:0 auto 34px; font-size:25px; font-weight:700; text-align:left; }
@@ -91,7 +87,7 @@
     .demo-toast { position:fixed; z-index:70; left:50%; bottom:28px; padding:11px 16px; opacity:0; pointer-events:none; border-radius:999px; color:#fff; background:var(--ink); transform:translate(-50%,12px); transition:.2s ease; font-size:12px; }
     .demo-toast.is-visible { opacity:1; transform:translate(-50%,0); }
     @media (max-width:1180px) { .content-stage { min-height:0; padding:38px 0 54px; display:block; } .direction-intro { margin-bottom:28px; } .core-entry-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .core-entry { min-height:350px; } .card-visual { height:165px; } }
-    @media (max-width:720px) { :root { --sidebar:0px; } .app-sidebar { position:relative; width:100%; min-height:0; padding:18px 20px; border-right:0; } .side-nav { display:none; } .content-shell { margin-left:0; padding:0 18px 38px; } .page-tools-row { height:62px; } .content-stage { padding-top:28px; } .direction-intro { margin:0 0 24px; font-size:21px; } .core-entry-grid { grid-template-columns:1fr; } .core-entry { min-height:330px; padding:28px 25px; } .core-entry h2 { font-size:24px; } .card-visual { height:150px; } .page-tool-menu { right:-45px; } }
+    @media (max-width:720px) { :root { --sidebar:0px; } .app-sidebar { position:relative; width:100%; min-height:0; padding:18px 20px; border-right:0; } .side-nav { display:none; } .content-shell { margin-left:0; padding:0 18px 38px; } .page-tools-row { height:62px; } .content-stage { padding-top:28px; } .direction-intro { margin:0 0 24px; font-size:21px; } .core-entry-grid { grid-template-columns:1fr; } .core-entry { min-height:330px; padding:28px 25px; } .core-entry h2 { font-size:24px; } .card-visual { height:150px; } }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
   </style>
 </head>
@@ -106,9 +102,9 @@
   </aside>
   <div class="content-shell">
     <div class="page-tools-row">
-      <button class="page-tool" aria-label="班级/年级管理" data-tooltip="班级/年级管理" data-management-link="teacher-grade-class-management.html"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3.5 19c.5-4 2.3-6 4.5-6s4 2 4.5 6M13 18c.4-2.9 1.7-4.5 3.6-4.5 1.8 0 3.2 1.5 3.6 4.5"/></svg></button>
-      <div class="page-tool-menu-wrap"><button class="page-tool" aria-label="错题本" data-tooltip="错题本" aria-expanded="false" aria-controls="mistakes-menu" data-mistakes-menu-button><svg viewBox="0 0 24 24"><path d="M4 5.5c3-1.2 5.7-.8 8 1.2v12c-2.3-2-5-2.4-8-1.2zM20 5.5c-3-1.2-5.7-.8-8 1.2v12c2.3-2 5-2.4 8-1.2z"/><path d="m15.2 9.5 3 3m0-3-3 3"/></svg></button><div class="page-tool-menu" id="mistakes-menu" role="menu" hidden><button role="menuitem" data-mistakes-workbook-link="teacher-mistakes-workbook.html">学生错题本</button><button role="menuitem" data-student-report-placeholder>学生报告</button></div></div>
-      <button class="page-tool" aria-label="我的资源" data-tooltip="我的资源" data-resource-link="teacher-my-resources-unified.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-4.4 3.2-6.5 7.5-6.5s6.9 2.1 7.5 6.5z"/></svg></button>
+      <span class="page-tool page-tool--static" aria-label="班级/年级管理" data-tooltip="班级/年级管理"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3.5 19c.5-4 2.3-6 4.5-6s4 2 4.5 6M13 18c.4-2.9 1.7-4.5 3.6-4.5 1.8 0 3.2 1.5 3.6 4.5"/></svg></span>
+      <span class="page-tool page-tool--static" aria-label="错题本" data-tooltip="错题本"><svg viewBox="0 0 24 24"><path d="M4 5.5c3-1.2 5.7-.8 8 1.2v12c-2.3-2-5-2.4-8-1.2zM20 5.5c-3-1.2-5.7-.8-8 1.2v12c2.3-2 5-2.4 8-1.2z"/><path d="m15.2 9.5 3 3m0-3-3 3"/></svg></span>
+      <span class="page-tool page-tool--static" aria-label="我的资源" data-tooltip="我的资源"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-4.4 3.2-6.5 7.5-6.5s6.9 2.1 7.5 6.5z"/></svg></span>
       <button class="page-tool" aria-label="消息" data-tooltip="消息" data-message-drawer-open><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></button>
     </div>
     <section class="content-stage">
@@ -127,22 +123,14 @@
     const toast = document.querySelector('.demo-toast');
     const messageLayer = document.querySelector('.message-layer');
     const messageClose = document.querySelector('.message-close');
-    const mistakesButton = document.querySelector('[data-mistakes-menu-button]');
-    const mistakesMenu = document.querySelector('#mistakes-menu');
     let toastTimer;
     let lastMessageTrigger;
     function showToast(text) { window.clearTimeout(toastTimer); toast.textContent = `${text} · Demo 仅展示首页交互`; toast.classList.add('is-visible'); toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'),2400); }
-    function closeMistakesMenu() { mistakesMenu.hidden = true; mistakesButton.setAttribute('aria-expanded','false'); }
-    mistakesButton.addEventListener('click',(event) => { event.stopPropagation(); const open = mistakesMenu.hidden; mistakesMenu.hidden = !open; mistakesButton.setAttribute('aria-expanded',String(open)); if (open) mistakesMenu.querySelector('[role="menuitem"]')?.focus(); });
-    document.querySelector('[data-mistakes-workbook-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.mistakesWorkbookLink; });
-    document.querySelector('[data-student-report-placeholder]').addEventListener('click',() => { closeMistakesMenu(); showToast('学生报告页待接入'); });
-    document.querySelector('[data-resource-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.resourceLink; });
-    document.querySelector('[data-management-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.managementLink; });
-    document.querySelector('[data-message-drawer-open]').addEventListener('click',(event) => { closeMistakesMenu(); lastMessageTrigger = event.currentTarget; messageLayer.hidden = false; window.requestAnimationFrame(() => messageLayer.classList.add('is-open')); messageClose.focus(); });
+    document.querySelector('[data-message-drawer-open]').addEventListener('click',(event) => { lastMessageTrigger = event.currentTarget; messageLayer.hidden = false; window.requestAnimationFrame(() => messageLayer.classList.add('is-open')); messageClose.focus(); });
     function closeMessageDrawer() { messageLayer.classList.remove('is-open'); window.setTimeout(() => { messageLayer.hidden = true; lastMessageTrigger?.focus(); },220); }
     messageClose.addEventListener('click',closeMessageDrawer);
-    document.addEventListener('click',(event) => { if (!event.target.closest('.page-tool-menu-wrap')) closeMistakesMenu(); const action = event.target.closest('[data-action]'); if (action) showToast(action.dataset.action); });
-    document.addEventListener('keydown',(event) => { if (event.key === 'Escape') { closeMistakesMenu(); if (!messageLayer.hidden) closeMessageDrawer(); } });
+    document.addEventListener('click',(event) => { const action = event.target.closest('[data-action]'); if (action) showToast(action.dataset.action); });
+    document.addEventListener('keydown',(event) => { if (event.key === 'Escape' && !messageLayer.hidden) closeMessageDrawer(); });
   </script>
 </body>
 </html>
