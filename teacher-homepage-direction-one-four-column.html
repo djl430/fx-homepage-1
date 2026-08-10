@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>飞象作业 · 精准教学核心入口（单行版）</title>
+  <style>
+    :root { --ink:#20243f; --muted:#747c99; --line:rgba(68,76,115,.11); --violet:#696be0; --canvas:#f1f4fb; --sidebar:190px; }
+    * { box-sizing:border-box; }
+    html { min-width:320px; background:var(--canvas); }
+    body { min-height:100vh; margin:0; color:var(--ink); background:radial-gradient(circle at 78% 19%,rgba(213,207,255,.5),transparent 34%),radial-gradient(circle at 55% 92%,rgba(198,232,249,.52),transparent 34%),linear-gradient(145deg,#f8f9fd,#eef3fb); font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
+    button { font:inherit; }
+    button:focus-visible { outline:3px solid rgba(105,107,224,.23); outline-offset:3px; }
+    .app-sidebar { position:absolute; inset:0 auto 0 0; width:var(--sidebar); min-height:100vh; padding:32px 16px; border-right:1px solid rgba(255,255,255,.78); background:rgba(239,243,251,.72); }
+    .brand { display:flex; align-items:center; gap:10px; font-size:18px; font-weight:750; }
+    .brand-mark { width:36px; height:36px; display:grid; place-items:center; border:1.5px solid currentColor; border-radius:50%; }
+    .brand-mark::before { content:"✦"; font-size:14px; }
+    .side-nav { margin-top:44px; display:grid; gap:12px; }
+    .side-link { min-height:50px; padding:0 16px; display:flex; align-items:center; gap:13px; border:0; border-radius:16px; color:#8189a3; background:transparent; font-size:16px; cursor:pointer; }
+    .side-link svg { width:21px; height:21px; }
+    .side-link.is-active { color:var(--ink); background:rgba(255,255,255,.88); box-shadow:0 14px 30px rgba(64,73,106,.08); }
+    .content-shell { min-height:100vh; margin-left:var(--sidebar); padding:0 34px; }
+    .page-tools-row { width:min(1320px,100%); height:82px; margin:auto; display:flex; justify-content:flex-end; align-items:center; gap:10px; }
+    .page-tool { position:relative; width:42px; height:42px; display:grid; place-items:center; border:0; border-radius:14px; color:var(--ink); background:transparent; cursor:pointer; transition:background .2s ease,transform .2s ease; }
+    .page-tool:hover,.page-tool[aria-expanded="true"] { background:rgba(255,255,255,.8); transform:translateY(-1px); }
+    .page-tool svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .page-tool::after { content:attr(data-tooltip); position:absolute; top:46px; right:0; width:max-content; padding:6px 9px; opacity:0; pointer-events:none; border-radius:8px; color:white; background:var(--ink); font-size:11px; transform:translateY(-3px); transition:.2s ease; }
+    .page-tool:hover::after,.page-tool:focus-visible::after { opacity:1; transform:none; }
+    .page-tool-menu-wrap { position:relative; }
+    .page-tool-menu { position:absolute; z-index:20; top:50px; right:0; width:146px; padding:7px; border:1px solid rgba(49,57,89,.09); border-radius:14px; background:#fff; box-shadow:0 18px 45px rgba(41,48,74,.16); }
+    .page-tool-menu[hidden] { display:none; }
+    .page-tool-menu button { width:100%; padding:11px 12px; border:0; border-radius:9px; color:var(--ink); background:transparent; text-align:left; cursor:pointer; }
+    .page-tool-menu button:hover { background:#f3f5fb; }
+    .content-frame { width:min(1160px,100%); margin-left:auto; margin-right:auto; }
+    .content-stage { min-height:calc(100vh - 82px); padding:32px 0 70px; display:flex; flex-direction:column; justify-content:center; }
+    .direction-intro { margin:0 auto 34px; font-size:25px; font-weight:700; text-align:left; }
+    .core-entry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .core-entry { position:relative; min-width:0; min-height:420px; padding:34px 30px; overflow:hidden; border:1px solid rgba(255,255,255,.92); border-radius:28px; box-shadow:0 22px 52px rgba(65,72,120,.08); transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease; }
+    .core-entry::before,.core-entry::after { display:none; }
+    .core-entry:hover { transform:translateY(-4px); border-color:rgba(105,107,224,.2); box-shadow:0 28px 62px rgba(65,72,120,.14); }
+    .core-entry:focus-within { border-color:rgba(105,107,224,.35); box-shadow:0 0 0 3px rgba(105,107,224,.1),0 28px 62px rgba(65,72,120,.14); }
+    .core-entry--bank { background:linear-gradient(155deg,#f2f7ff 0%,#edf5ff 100%); }
+    .core-entry--homework { background:linear-gradient(155deg,#effbf3 0%,#e6f8ed 100%); }
+    .core-entry--diagnosis { background:linear-gradient(155deg,#fff5eb 0%,#fff0e1 100%); }
+    .core-entry--practice { background:linear-gradient(155deg,#f6f3ff 0%,#efedff 100%); }
+    .core-entry h2 { position:relative; z-index:3; margin:0 0 10px; font-size:27px; line-height:1.25; }
+    .core-entry p { position:relative; z-index:3; min-height:50px; margin:0; color:var(--muted); font-size:15px; line-height:1.65; }
+    .core-entry-signal,.core-entry-support { position:relative; z-index:4; width:fit-content; max-width:100%; margin-top:18px; padding:8px 11px; display:inline-flex; align-items:center; gap:7px; border:1px solid rgba(62,92,142,.12); border-radius:999px; color:#3a6487; background:rgba(255,255,255,.68); box-shadow:0 8px 20px rgba(58,83,113,.07); font-size:11px; }
+    .core-entry-signal strong { color:var(--ink); font-size:15px; }
+    .core-entry-signal i { width:7px; height:7px; flex:0 0 auto; border-radius:50%; background:currentColor; box-shadow:0 0 0 4px rgba(42,145,177,.12); }
+    .core-entry--homework .core-entry-signal { color:#2e8c5d; }
+    .core-entry--homework .core-entry-signal i { box-shadow:0 0 0 4px rgba(46,140,93,.12); }
+    .core-entry-support { color:#5d6383; box-shadow:none; line-height:1.45; }
+    .card-visual { position:absolute; z-index:1; left:0; right:0; bottom:0; height:235px; pointer-events:none; transition:transform .28s cubic-bezier(.2,.75,.3,1); }
+    .core-entry:hover .card-visual { transform:translateY(-6px); }
+    .visual-folder,.visual-sheet,.visual-target,.visual-practice-sheet { position:absolute; display:block; border:1px solid rgba(255,255,255,.82); box-shadow:0 22px 45px rgba(70,90,150,.14); transition:transform .28s cubic-bezier(.2,.75,.3,1); }
+    .visual-folder { width:210px; height:145px; left:50%; bottom:-26px; border-radius:28px 28px 12px 12px; transform:translateX(-50%) rotate(8deg) skewX(-8deg); background:linear-gradient(145deg,rgba(255,255,255,.58),rgba(70,137,246,.92)); }
+    .visual-folder--back { margin-left:-34px; bottom:-2px; opacity:.58; transform:translateX(-50%) rotate(-12deg) skewX(-8deg); }
+    .core-entry:hover .visual-folder--front { transform:translateX(-47%) rotate(11deg) skewX(-8deg); }
+    .core-entry:hover .visual-folder--back { transform:translateX(-53%) translateY(-4px) rotate(-15deg) skewX(-8deg); }
+    .visual-sheet { width:205px; height:135px; left:50%; bottom:-10px; border-radius:28px; transform:translateX(-50%) rotate(-8deg); background:linear-gradient(150deg,rgba(255,255,255,.8),rgba(65,201,116,.92)); }
+    .visual-sheet--back { bottom:34px; opacity:.72; transform:translateX(-42%) rotate(16deg); background:linear-gradient(150deg,rgba(255,255,255,.76),rgba(91,224,151,.78)); }
+    .core-entry:hover .visual-sheet--front { transform:translateX(-52%) rotate(-11deg); }
+    .core-entry:hover .visual-sheet--back { transform:translateX(-39%) translateY(-7px) rotate(19deg); }
+    .visual-person { position:absolute; display:block; border:1px solid rgba(255,255,255,.86); transition:transform .28s cubic-bezier(.2,.75,.3,1); }
+    .visual-person--back { width:210px; height:210px; right:-28px; bottom:-42px; border-radius:50%; background:linear-gradient(145deg,#ffb47d,#ff7548); box-shadow:0 24px 50px rgba(239,113,54,.2); }
+    .visual-person--head { width:76px; height:76px; left:48%; bottom:116px; border-radius:50%; background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,224,203,.78)); box-shadow:0 15px 34px rgba(221,127,75,.13); }
+    .visual-person--body { width:150px; height:150px; left:32%; bottom:-66px; border-radius:50%; background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(255,224,205,.72)); box-shadow:0 18px 44px rgba(221,127,75,.12); }
+    .core-entry:hover .visual-person--back { transform:translate(-5px,-4px); }
+    .core-entry:hover .visual-person--head { transform:translate(2px,-7px); }
+    .core-entry:hover .visual-person--body { transform:translate(-3px,-4px); }
+    .visual-target { left:50%; bottom:-54px; border-radius:36px 36px 14px 14px; transform:translateX(-50%); }
+    .visual-target--outer { width:220px; height:240px; background:linear-gradient(155deg,rgba(255,255,255,.54),rgba(101,105,245,.9)); }
+    .visual-target--inner { width:132px; height:170px; bottom:-32px; background:linear-gradient(155deg,rgba(255,255,255,.72),rgba(203,201,255,.8)); }
+    .visual-practice-sheet { width:120px; height:88px; right:18px; bottom:24px; border-radius:22px; background:rgba(255,255,255,.46); transform:rotate(11deg); }
+    .core-entry:hover .visual-target--outer { transform:translateX(-50%) translateY(-6px) rotate(2deg); }
+    .core-entry:hover .visual-target--inner { transform:translateX(-50%) translateY(-2px); }
+    .core-entry:hover .visual-practice-sheet { transform:translate(-5px,-7px) rotate(8deg); }
+    .message-layer { position:fixed; z-index:50; inset:0; background:rgba(31,36,60,.15); opacity:0; transition:opacity .22s ease; }
+    .message-layer[hidden] { display:none; }
+    .message-layer.is-open { opacity:1; }
+    .message-drawer { position:absolute; top:0; right:0; width:min(420px,90vw); height:100%; padding:26px; overflow:auto; background:#fff; box-shadow:-24px 0 60px rgba(33,40,67,.14); transform:translateX(100%); transition:transform .22s ease; }
+    .message-layer.is-open .message-drawer { transform:none; }
+    .message-drawer-head { display:flex; align-items:center; justify-content:space-between; }
+    .message-drawer-head h2 { margin:0; font-size:24px; }
+    .message-close { width:38px; height:38px; border:0; border-radius:12px; background:#f4f5f9; font-size:25px; cursor:pointer; }
+    .message-list { margin-top:20px; display:grid; gap:0; }
+    .message-item { padding:18px 0; border-bottom:1px solid var(--line); }
+    .message-item p { margin:0 0 9px; font-size:14px; line-height:1.65; }
+    .message-item time { color:#9399aa; font-size:12px; }
+    .demo-toast { position:fixed; z-index:70; left:50%; bottom:28px; padding:11px 16px; opacity:0; pointer-events:none; border-radius:999px; color:#fff; background:var(--ink); transform:translate(-50%,12px); transition:.2s ease; font-size:12px; }
+    .demo-toast.is-visible { opacity:1; transform:translate(-50%,0); }
+    @media (max-width:1180px) { .content-stage { min-height:0; padding:38px 0 54px; display:block; } .direction-intro { margin-bottom:28px; } .core-entry-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .core-entry { min-height:350px; } .card-visual { height:165px; } }
+    @media (max-width:720px) { :root { --sidebar:0px; } .app-sidebar { position:relative; width:100%; min-height:0; padding:18px 20px; border-right:0; } .side-nav { display:none; } .content-shell { margin-left:0; padding:0 18px 38px; } .page-tools-row { height:62px; } .content-stage { padding-top:28px; } .direction-intro { margin:0 0 24px; font-size:21px; } .core-entry-grid { grid-template-columns:1fr; } .core-entry { min-height:330px; padding:28px 25px; } .core-entry h2 { font-size:24px; } .card-visual { height:150px; } .page-tool-menu { right:-45px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <aside class="app-sidebar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>飞象作业</span></div>
+    <nav class="side-nav" aria-label="主导航">
+      <button class="side-link is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3.5h12v17H6zM9 8h6M9 12h6M9 16h3"/></svg><span>作业</span></button>
+      <button class="side-link" data-action="进入学校数据"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-6 9 6-9 6-9-6Z"/><path d="M6 13v5h12v-5"/></svg><span>学校数据</span></button>
+      <button class="side-link" data-action="进入区域数据"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>区域数据</span></button>
+    </nav>
+  </aside>
+  <div class="content-shell">
+    <div class="page-tools-row">
+      <button class="page-tool" aria-label="班级/年级管理" data-tooltip="班级/年级管理" data-management-link="teacher-grade-class-management.html"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3.5 19c.5-4 2.3-6 4.5-6s4 2 4.5 6M13 18c.4-2.9 1.7-4.5 3.6-4.5 1.8 0 3.2 1.5 3.6 4.5"/></svg></button>
+      <div class="page-tool-menu-wrap"><button class="page-tool" aria-label="错题本" data-tooltip="错题本" aria-expanded="false" aria-controls="mistakes-menu" data-mistakes-menu-button><svg viewBox="0 0 24 24"><path d="M4 5.5c3-1.2 5.7-.8 8 1.2v12c-2.3-2-5-2.4-8-1.2zM20 5.5c-3-1.2-5.7-.8-8 1.2v12c2.3-2 5-2.4 8-1.2z"/><path d="m15.2 9.5 3 3m0-3-3 3"/></svg></button><div class="page-tool-menu" id="mistakes-menu" role="menu" hidden><button role="menuitem" data-mistakes-workbook-link="teacher-mistakes-workbook.html">学生错题本</button><button role="menuitem" data-student-report-placeholder>学生报告</button></div></div>
+      <button class="page-tool" aria-label="我的资源" data-tooltip="我的资源" data-resource-link="teacher-my-resources-unified.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-4.4 3.2-6.5 7.5-6.5s6.9 2.1 7.5 6.5z"/></svg></button>
+      <button class="page-tool" aria-label="消息" data-tooltip="消息" data-message-drawer-open><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></button>
+    </div>
+    <section class="content-stage">
+      <p class="direction-intro content-frame">Hi李老师，欢迎使用飞象AI作业</p>
+      <main class="core-entry-grid content-frame" aria-label="精准教学核心入口">
+      <article class="core-entry core-entry--bank"><h2>AI题库</h2><p>本地最新精品资源</p><span class="core-entry-signal"><i></i>近 7 日新增 <strong>12</strong> 份题单</span><div class="card-visual card-visual--bank" aria-hidden="true"><span class="visual-folder visual-folder--back"></span><span class="visual-folder visual-folder--front"></span></div></article>
+      <article class="core-entry core-entry--homework"><h2>作业与考试</h2><p>任意作业和考试均可采集、AI 批改</p><span class="core-entry-signal"><i></i><strong>2</strong> 份新上传作业待确认</span><div class="card-visual card-visual--homework" aria-hidden="true"><span class="visual-sheet visual-sheet--back"></span><span class="visual-sheet visual-sheet--front"></span></div></article>
+      <article class="core-entry core-entry--diagnosis"><h2>AI错因诊断</h2><p>查看历史作业学情，洞察共性与个体错因</p><div class="card-visual card-visual--diagnosis" aria-hidden="true"><span class="visual-person visual-person--back"></span><span class="visual-person visual-person--head"></span><span class="visual-person visual-person--body"></span></div></article>
+      <article class="core-entry core-entry--practice"><h2>AI个性化练习</h2><p>基于学生错因，生成个性化练习方案</p><div class="card-visual card-visual--practice" aria-hidden="true"><span class="visual-target visual-target--outer"></span><span class="visual-target visual-target--inner"></span><span class="visual-practice-sheet"></span></div></article>
+      </main>
+    </section>
+  </div>
+  <div class="message-layer" hidden><aside class="message-drawer" role="dialog" aria-modal="true" aria-labelledby="message-title"><header class="message-drawer-head"><h2 id="message-title">消息中心</h2><button class="message-close" data-message-drawer-close aria-label="关闭消息中心">×</button></header><div class="message-list"><article class="message-item"><p>《七年级全等三角形练习》的委托录题审核被驳回，请按照审核意见修改后重新提交。</p><time>今天 14:08</time></article><article class="message-item"><p>七年级1班作业已完成采集，可开始生成错因诊断。</p><time>今天 10:32</time></article><article class="message-item"><p>近 7 日题库新增 12 份精品题单。</p><time>昨天 18:20</time></article></div></aside></div>
+  <div class="demo-toast" role="status" aria-live="polite"></div>
+  <script>
+    const toast = document.querySelector('.demo-toast');
+    const messageLayer = document.querySelector('.message-layer');
+    const messageClose = document.querySelector('.message-close');
+    const mistakesButton = document.querySelector('[data-mistakes-menu-button]');
+    const mistakesMenu = document.querySelector('#mistakes-menu');
+    let toastTimer;
+    let lastMessageTrigger;
+    function showToast(text) { window.clearTimeout(toastTimer); toast.textContent = `${text} · Demo 仅展示首页交互`; toast.classList.add('is-visible'); toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'),2400); }
+    function closeMistakesMenu() { mistakesMenu.hidden = true; mistakesButton.setAttribute('aria-expanded','false'); }
+    mistakesButton.addEventListener('click',(event) => { event.stopPropagation(); const open = mistakesMenu.hidden; mistakesMenu.hidden = !open; mistakesButton.setAttribute('aria-expanded',String(open)); if (open) mistakesMenu.querySelector('[role="menuitem"]')?.focus(); });
+    document.querySelector('[data-mistakes-workbook-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.mistakesWorkbookLink; });
+    document.querySelector('[data-student-report-placeholder]').addEventListener('click',() => { closeMistakesMenu(); showToast('学生报告页待接入'); });
+    document.querySelector('[data-resource-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.resourceLink; });
+    document.querySelector('[data-management-link]').addEventListener('click',(event) => { window.location.href = event.currentTarget.dataset.managementLink; });
+    document.querySelector('[data-message-drawer-open]').addEventListener('click',(event) => { closeMistakesMenu(); lastMessageTrigger = event.currentTarget; messageLayer.hidden = false; window.requestAnimationFrame(() => messageLayer.classList.add('is-open')); messageClose.focus(); });
+    function closeMessageDrawer() { messageLayer.classList.remove('is-open'); window.setTimeout(() => { messageLayer.hidden = true; lastMessageTrigger?.focus(); },220); }
+    messageClose.addEventListener('click',closeMessageDrawer);
+    document.addEventListener('click',(event) => { if (!event.target.closest('.page-tool-menu-wrap')) closeMistakesMenu(); const action = event.target.closest('[data-action]'); if (action) showToast(action.dataset.action); });
+    document.addEventListener('keydown',(event) => { if (event.key === 'Escape') { closeMistakesMenu(); if (!messageLayer.hidden) closeMessageDrawer(); } });
+  </script>
+</body>
+</html>
