@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the homepage “错题本” top-navigation item with a “班级与学生” entry whose label and icon communicate class- and student-level stage learning insight.
+**Goal:** Replace the homepage “错题本” top-navigation item with a “班级与学生” entry whose report-and-trend icon prioritizes stage learning insight.
 
 **Architecture:** Keep the single-file static homepage architecture unchanged. Add one Node built-in test that reads `index.html`, then make a minimal semantic and SVG-only edit to the existing static navigation item.
 
@@ -59,10 +59,10 @@ git commit -m "test: cover class and student navigation"
 Replace the existing “错题本” span with:
 
 ```html
-<span class="page-tool page-tool--static" aria-label="班级与学生" data-tooltip="班级与学生"><svg viewBox="0 0 24 24"><circle cx="8" cy="7.5" r="2.5"/><circle cx="16" cy="8.5" r="2"/><path d="M3.5 18c.5-3.7 2.1-5.5 4.5-5.5 1.8 0 3.2 1 4 3M13.2 13.5c.8-.9 1.7-1.3 2.8-1.3 2.1 0 3.6 1.8 4 5.3"/><path d="m13.5 19 2-2 1.7 1.4 3.3-3.4"/></svg></span>
+<span class="page-tool page-tool--static" aria-label="班级与学生" data-tooltip="班级与学生"><svg viewBox="0 0 24 24" data-icon="stage-learning-report" aria-hidden="true"><path d="M6 3.5h8.5L18 7v13.5H6z"/><path d="M14.5 3.5V7H18"/><path d="M8.5 9.5h3"/><path d="m8.5 16.5 2.5-3 2.2 1.8 2.8-4"/></svg></span>
 ```
 
-This preserves the entry's existing position and interaction styling while replacing the crossed-out notebook with student silhouettes plus a small progress line.
+This preserves the entry's existing position and interaction styling while replacing the crossed-out notebook with a stage report and trend line, without using people as the primary visual.
 
 - [ ] **Step 2: Run the focused test to verify it passes**
 
