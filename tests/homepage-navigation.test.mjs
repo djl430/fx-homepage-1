@@ -59,6 +59,17 @@ test("homework card presents AI smart grading while preserving its supporting co
   assert.match(card, /<strong>2<\/strong> 份新上传作业待确认/);
 });
 
+test("diagnosis card presents the current learning insight copy", () => {
+  const card = homepage.match(
+    /<article class="core-entry core-entry--diagnosis">([\s\S]*?)<\/article>/,
+  )?.[1];
+
+  assert.ok(card, "expected to find the diagnosis core-entry card");
+  assert.match(card, /<h2>AI错因诊断<\/h2>/);
+  assert.match(card, /<p>洞察学情动态，精准定位错因<\/p>/);
+  assert.doesNotMatch(card, /查看历史作业学情，洞察共性与个体错因/);
+});
+
 test("AI bank and smart grading cards navigate in the current page", () => {
   const bankLink = homepage.match(
     /<a class="core-entry core-entry--bank" href="https:\/\/liweimian\.github\.io\/AIQuestion0820\/"([^>]*)>([\s\S]*?)<\/a>/,
