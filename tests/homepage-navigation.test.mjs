@@ -54,7 +54,8 @@ test("homework card presents AI smart grading while preserving its supporting co
   assert.ok(card, "expected to find the homework core-entry card");
   assert.match(card, /<h2>AI智批<\/h2>/);
   assert.doesNotMatch(card, /<h2>作业与考试<\/h2>/);
-  assert.match(card, /<p>任意作业和考试均可采集、AI 批改<\/p>/);
+  assert.match(card, /<p>任意作业和试卷均可批<\/p>/);
+  assert.doesNotMatch(card, /任意作业和考试均可采集、AI 批改/);
   assert.match(card, /<strong>2<\/strong> 份新上传作业待确认/);
 });
 
@@ -78,7 +79,7 @@ test("AI bank and smart grading cards navigate in the current page", () => {
     /近 7 日新增|<strong>12<\/strong>|份题单/,
   );
   assert.match(gradingLink[2], /<h2>AI智批<\/h2>/);
-  assert.match(gradingLink[2], /任意作业和考试均可采集、AI 批改/);
+  assert.match(gradingLink[2], /任意作业和试卷均可批/);
   assert.match(
     homepage,
     /<article class="core-entry core-entry--diagnosis">/,
