@@ -33,7 +33,7 @@ test("AI bank and smart grading cards navigate in the current page", () => {
     /<a class="core-entry core-entry--bank" href="https:\/\/liweimian\.github\.io\/AIQuestion0820\/"([^>]*)>([\s\S]*?)<\/a>/,
   );
   const gradingLink = homepage.match(
-    /<a class="core-entry core-entry--homework" href="fx-ai\/homework-exam-unified-demo\.html"([^>]*)>([\s\S]*?)<\/a>/,
+    /<a class="core-entry core-entry--homework" href="https:\/\/djl430\.github\.io\/fx-ai\/"([^>]*)>([\s\S]*?)<\/a>/,
   );
 
   assert.ok(bankLink, "expected AI题库 to be a whole-card link");
