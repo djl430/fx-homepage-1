@@ -1,8 +1,30 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 const homepage = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+
+test("sidebar uses the supplied logo and only keeps homework navigation", () => {
+  const logoUrl = new URL("../assets/fx-logo.png", import.meta.url);
+
+  assert.match(
+    homepage,
+    /<div class="brand"><img class="brand-logo" src="assets\/fx-logo\.png" alt="飞象作业"><\/div>/,
+  );
+  assert.doesNotMatch(homepage, /<span>飞象作业<\/span>|class="brand-mark"/);
+  assert.doesNotMatch(homepage, /学校数据|区域数据|data-action/);
+  assert.equal(
+    (homepage.match(/class="side-link(?: is-active)?"/g) ?? []).length,
+    1,
+  );
+  assert.match(
+    homepage,
+    /class="side-link is-active"[^>]*>[\s\S]*?<span>作业<\/span><\/button>/,
+  );
+  assert.doesNotMatch(homepage, /demo-toast|showToast|toastTimer/);
+  assert.ok(existsSync(logoUrl), "expected the supplied sidebar logo asset");
+  assert.equal(readFileSync(logoUrl).subarray(1, 4).toString("ascii"), "PNG");
+});
 
 test("top navigation omits class and student and message entries", () => {
   assert.doesNotMatch(

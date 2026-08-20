@@ -12,9 +12,8 @@
     button { font:inherit; }
     button:focus-visible { outline:3px solid rgba(105,107,224,.23); outline-offset:3px; }
     .app-sidebar { position:absolute; inset:0 auto 0 0; width:var(--sidebar); min-height:100vh; padding:32px 16px; border-right:1px solid rgba(255,255,255,.78); background:rgba(239,243,251,.72); }
-    .brand { display:flex; align-items:center; gap:10px; font-size:18px; font-weight:750; }
-    .brand-mark { width:36px; height:36px; display:grid; place-items:center; border:1.5px solid currentColor; border-radius:50%; }
-    .brand-mark::before { content:"✦"; font-size:14px; }
+    .brand { width:56px; height:56px; display:flex; align-items:center; }
+    .brand-logo { width:56px; height:56px; display:block; object-fit:contain; }
     .side-nav { margin-top:44px; display:grid; gap:12px; }
     .side-link { min-height:50px; padding:0 16px; display:flex; align-items:center; gap:13px; border:0; border-radius:16px; color:#8189a3; background:transparent; font-size:16px; cursor:pointer; }
     .side-link svg { width:21px; height:21px; }
@@ -72,8 +71,6 @@
     .core-entry:hover .visual-target--outer { transform:translateX(-50%) translateY(-6px) rotate(2deg); }
     .core-entry:hover .visual-target--inner { transform:translateX(-50%) translateY(-2px); }
     .core-entry:hover .visual-practice-sheet { transform:translate(-5px,-7px) rotate(8deg); }
-    .demo-toast { position:fixed; z-index:70; left:50%; bottom:28px; padding:11px 16px; opacity:0; pointer-events:none; border-radius:999px; color:#fff; background:var(--ink); transform:translate(-50%,12px); transition:.2s ease; font-size:12px; }
-    .demo-toast.is-visible { opacity:1; transform:translate(-50%,0); }
     @media (max-width:1180px) { .content-stage { min-height:0; padding:38px 0 54px; display:block; } .direction-intro { margin-bottom:28px; } .core-entry-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .core-entry { min-height:350px; } .card-visual { height:165px; } }
     @media (max-width:720px) { :root { --sidebar:0px; } .app-sidebar { position:relative; width:100%; min-height:0; padding:18px 20px; border-right:0; } .side-nav { display:none; } .content-shell { margin-left:0; padding:0 18px 38px; } .page-tools-row { height:62px; } .content-stage { padding-top:28px; } .direction-intro { margin:0 0 24px; font-size:21px; } .core-entry-grid { grid-template-columns:1fr; } .core-entry { min-height:330px; padding:28px 25px; } .core-entry h2 { font-size:24px; } .card-visual { height:150px; } }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
@@ -81,11 +78,9 @@
 </head>
 <body>
   <aside class="app-sidebar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>飞象作业</span></div>
+    <div class="brand"><img class="brand-logo" src="assets/fx-logo.png" alt="飞象作业"></div>
     <nav class="side-nav" aria-label="主导航">
       <button class="side-link is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3.5h12v17H6zM9 8h6M9 12h6M9 16h3"/></svg><span>作业</span></button>
-      <button class="side-link" data-action="进入学校数据"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-6 9 6-9 6-9-6Z"/><path d="M6 13v5h12v-5"/></svg><span>学校数据</span></button>
-      <button class="side-link" data-action="进入区域数据"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>区域数据</span></button>
     </nav>
   </aside>
   <div class="content-shell">
@@ -103,12 +98,5 @@
       </main>
     </section>
   </div>
-  <div class="demo-toast" role="status" aria-live="polite"></div>
-  <script>
-    const toast = document.querySelector('.demo-toast');
-    let toastTimer;
-    function showToast(text) { window.clearTimeout(toastTimer); toast.textContent = `${text} · Demo 仅展示首页交互`; toast.classList.add('is-visible'); toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'),2400); }
-    document.addEventListener('click',(event) => { const action = event.target.closest('[data-action]'); if (action) showToast(action.dataset.action); });
-  </script>
 </body>
 </html>
