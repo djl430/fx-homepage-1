@@ -71,7 +71,8 @@ test("AI bank and smart grading cards navigate in the current page", () => {
   assert.doesNotMatch(bankLink[1], /target=/);
   assert.doesNotMatch(gradingLink[1], /target=/);
   assert.match(bankLink[2], /<h2>AI题库<\/h2>/);
-  assert.match(bankLink[2], /本地最新精品资源/);
+  assert.match(bankLink[2], /本地精品资源持续更新/);
+  assert.doesNotMatch(bankLink[2], /本地最新精品资源/);
   assert.doesNotMatch(
     bankLink[2],
     /近 7 日新增|<strong>12<\/strong>|份题单/,
