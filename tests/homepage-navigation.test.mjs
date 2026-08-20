@@ -31,7 +31,9 @@ test("top navigation restores class and student while omitting management and me
     homepage,
     /aria-label="班级与学生" data-tooltip="班级与学生"/,
   );
-  assert.doesNotMatch(homepage, /data-icon="stage-learning-report"/);
+  assert.match(homepage, /data-icon="stage-learning-report"/);
+  assert.match(homepage, /M6 3\.5h8\.5L18 7v13\.5H6z/);
+  assert.match(homepage, /m8\.5 16\.5 2\.5-3 2\.2 1\.8 2\.8-4/);
   assert.doesNotMatch(homepage, /aria-label="消息"|data-tooltip="消息"/);
   assert.doesNotMatch(homepage, /data-message-drawer-(?:open|close)/);
   assert.doesNotMatch(homepage, /class="message-layer"|消息中心/);
