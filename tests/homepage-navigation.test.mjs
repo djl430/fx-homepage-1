@@ -18,7 +18,7 @@ test("top navigation presents class and student stage insight instead of the err
 
 test("homework card presents AI smart grading while preserving its supporting copy", () => {
   const card = homepage.match(
-    /<article class="core-entry core-entry--homework">([\s\S]*?)<\/article>/,
+    /<(?:article|a) class="core-entry core-entry--homework"[^>]*>([\s\S]*?)<\/(?:article|a)>/,
   )?.[1];
 
   assert.ok(card, "expected to find the homework core-entry card");
@@ -26,4 +26,30 @@ test("homework card presents AI smart grading while preserving its supporting co
   assert.doesNotMatch(card, /<h2>作业与考试<\/h2>/);
   assert.match(card, /<p>任意作业和考试均可采集、AI 批改<\/p>/);
   assert.match(card, /<strong>2<\/strong> 份新上传作业待确认/);
+});
+
+test("AI bank and smart grading cards navigate in the current page", () => {
+  const bankLink = homepage.match(
+    /<a class="core-entry core-entry--bank" href="https:\/\/liweimian\.github\.io\/AIQuestion0820\/"([^>]*)>([\s\S]*?)<\/a>/,
+  );
+  const gradingLink = homepage.match(
+    /<a class="core-entry core-entry--homework" href="fx-ai\/homework-exam-unified-demo\.html"([^>]*)>([\s\S]*?)<\/a>/,
+  );
+
+  assert.ok(bankLink, "expected AI题库 to be a whole-card link");
+  assert.ok(gradingLink, "expected AI智批 to be a whole-card link");
+  assert.doesNotMatch(bankLink[1], /target=/);
+  assert.doesNotMatch(gradingLink[1], /target=/);
+  assert.match(bankLink[2], /<h2>AI题库<\/h2>/);
+  assert.match(bankLink[2], /本地最新精品资源/);
+  assert.match(gradingLink[2], /<h2>AI智批<\/h2>/);
+  assert.match(gradingLink[2], /任意作业和考试均可采集、AI 批改/);
+  assert.match(
+    homepage,
+    /<article class="core-entry core-entry--diagnosis">/,
+  );
+  assert.match(
+    homepage,
+    /<article class="core-entry core-entry--practice">/,
+  );
 });
