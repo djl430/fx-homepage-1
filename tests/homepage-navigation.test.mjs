@@ -26,10 +26,10 @@ test("sidebar uses the supplied logo and only keeps homework navigation", () => 
   assert.equal(readFileSync(logoUrl).subarray(1, 4).toString("ascii"), "PNG");
 });
 
-test("top navigation omits class and student and message entries", () => {
-  assert.doesNotMatch(
+test("top navigation restores class and student while omitting management and message entries", () => {
+  assert.match(
     homepage,
-    /aria-label="班级与学生"|data-tooltip="班级与学生"/,
+    /aria-label="班级与学生" data-tooltip="班级与学生"/,
   );
   assert.doesNotMatch(homepage, /data-icon="stage-learning-report"/);
   assert.doesNotMatch(homepage, /aria-label="消息"|data-tooltip="消息"/);
@@ -39,7 +39,7 @@ test("top navigation omits class and student and message entries", () => {
     homepage,
     /messageLayer|messageClose|lastMessageTrigger|closeMessageDrawer/,
   );
-  assert.match(
+  assert.doesNotMatch(
     homepage,
     /aria-label="班级\/年级管理" data-tooltip="班级\/年级管理"/,
   );
