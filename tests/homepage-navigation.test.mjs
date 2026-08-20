@@ -86,4 +86,6 @@ test("AI bank and smart grading cards navigate in the current page", () => {
     homepage,
     /<article class="core-entry core-entry--practice">/,
   );
+  assert.match(homepage, /<p>基于学生错因，生成个性化练习<\/p>/);
+  assert.doesNotMatch(homepage, /基于学生错因，生成个性化练习方案/);
 });
