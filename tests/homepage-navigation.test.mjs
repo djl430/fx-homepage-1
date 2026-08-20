@@ -15,3 +15,15 @@ test("top navigation presents class and student stage insight instead of the err
   assert.match(homepage, /m8\.5 16\.5 2\.5-3 2\.2 1\.8 2\.8-4/);
   assert.doesNotMatch(homepage, /m15\.2 9\.5 3 3m0-3-3 3/i);
 });
+
+test("homework card presents AI smart grading while preserving its supporting copy", () => {
+  const card = homepage.match(
+    /<article class="core-entry core-entry--homework">([\s\S]*?)<\/article>/,
+  )?.[1];
+
+  assert.ok(card, "expected to find the homework core-entry card");
+  assert.match(card, /<h2>AI智批<\/h2>/);
+  assert.doesNotMatch(card, /<h2>作业与考试<\/h2>/);
+  assert.match(card, /<p>任意作业和考试均可采集、AI 批改<\/p>/);
+  assert.match(card, /<strong>2<\/strong> 份新上传作业待确认/);
+});
