@@ -63,7 +63,7 @@ test("homework card presents AI smart grading while preserving its supporting co
 
 test("diagnosis card presents the current learning insight copy", () => {
   const card = homepage.match(
-    /<article class="core-entry core-entry--diagnosis">([\s\S]*?)<\/article>/,
+    /<a class="core-entry core-entry--diagnosis" href="https:\/\/zingistop\.github\.io\/ai-diagnosis-demo\/">([\s\S]*?)<\/a>/,
   )?.[1];
 
   assert.ok(card, "expected to find the diagnosis core-entry card");
@@ -72,18 +72,23 @@ test("diagnosis card presents the current learning insight copy", () => {
   assert.doesNotMatch(card, /查看历史作业学情，洞察共性与个体错因/);
 });
 
-test("AI bank and smart grading cards navigate in the current page", () => {
+test("available product cards navigate in the current page", () => {
   const bankLink = homepage.match(
     /<a class="core-entry core-entry--bank" href="https:\/\/liweimian\.github\.io\/AIQuestion0820\/"([^>]*)>([\s\S]*?)<\/a>/,
   );
   const gradingLink = homepage.match(
     /<a class="core-entry core-entry--homework" href="https:\/\/djl430\.github\.io\/fx-ai\/"([^>]*)>([\s\S]*?)<\/a>/,
   );
+  const diagnosisLink = homepage.match(
+    /<a class="core-entry core-entry--diagnosis" href="https:\/\/zingistop\.github\.io\/ai-diagnosis-demo\/"([^>]*)>([\s\S]*?)<\/a>/,
+  );
 
   assert.ok(bankLink, "expected AI题库 to be a whole-card link");
   assert.ok(gradingLink, "expected AI智批 to be a whole-card link");
+  assert.ok(diagnosisLink, "expected AI错因诊断 to be a whole-card link");
   assert.doesNotMatch(bankLink[1], /target=/);
   assert.doesNotMatch(gradingLink[1], /target=/);
+  assert.doesNotMatch(diagnosisLink[1], /target=/);
   assert.match(bankLink[2], /<h2>AI题库<\/h2>/);
   assert.match(bankLink[2], /精选本地资源，智能高效组卷/);
   assert.doesNotMatch(bankLink[2], /本地精品资源持续更新/);
@@ -94,10 +99,7 @@ test("AI bank and smart grading cards navigate in the current page", () => {
   );
   assert.match(gradingLink[2], /<h2>AI智批<\/h2>/);
   assert.match(gradingLink[2], /任意作业和试卷均可批/);
-  assert.match(
-    homepage,
-    /<article class="core-entry core-entry--diagnosis">/,
-  );
+  assert.match(diagnosisLink[2], /<h2>AI错因诊断<\/h2>/);
   assert.match(
     homepage,
     /<article class="core-entry core-entry--practice">/,
